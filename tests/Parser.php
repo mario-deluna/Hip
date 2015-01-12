@@ -32,9 +32,44 @@ class Parser_Test extends \PHPUnit_Framework_TestCase
 	/**
 	 * test parser shortcut
 	 */
-	public function test_staticShortcut()
+	public function test_parseSimple()
 	{	
-		/*$scope = Jane::parse( 'var bar' );
-		$this->assertInstanceOf( 'Jane\\Scope', $scope );*/
+		$data = Hip::decode( '
+name: "Mario"
+age: 21
+active: yes
+hasCamera: no
+		' );
+
+		print_r( $data ); die;
+		
+		$data = Hip::decode( '
+		
+name: "Mario"
+age: 21
+active: yes
+hasCamera: no
+
+groups:
+	"Admins"
+	"Users"
+	
+emails
+	primary: "mario@clancats.com"
+	secondary: "info@example.com"
+
+bands
+	-
+	name: "La Dispute"
+	genre: 
+		"Hardcore"
+		"Post-Hardcore"
+	--
+	name: "Antilopen Gang"
+	genre: "HipHip", "Rap"
+	-		
+		' );
+		
+		print_r( $data ); die;
 	}
 }

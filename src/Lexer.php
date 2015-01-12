@@ -78,6 +78,9 @@ class Lexer
 	 */
 	public function __construct( $code )
 	{
+		// we have to convert all tabs to whitespaces to
+		$code = trim( str_replace( "\t", " ", $code ) );
+		
 		$this->code = $code;
 		$this->length = strlen( $code );
 	}
@@ -116,11 +119,7 @@ class Lexer
 				
 				$this->offset += strlen( $matches[0] );
 				
-				return array(
-					$token,
-					$matches[0],
-					$this->line,
-				);
+				return new Token( array( $token, $matches[0], $this->line+1 ) );
 			}
 		}
 		
@@ -130,8 +129,8 @@ class Lexer
 	/**
 	 * Lex the tokens from the code
 	 * 
-	 * @throws Jane\Lexer\Exception
-	 * @return array
+	 * @throws Hip\Lexer\Exception
+	 * @return array[Hip\Token]
 	 */
 	public function tokens() 
 	{

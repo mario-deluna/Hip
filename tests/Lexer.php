@@ -22,7 +22,7 @@ class Lexer_Test extends \PHPUnit_Framework_TestCase
 		
 		foreach( $tokens as $token )
 		{
-			$types[] = $token[0];
+			$types[] = $token->type;
 		}
 		
 		return $types;
