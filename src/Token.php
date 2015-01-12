@@ -43,4 +43,19 @@ class Token
 	{
 		list( $this->type, $this->value, $this->line ) = $token;
 	}
+	
+	/**
+	 * Is this a value token?
+	 *
+	 * @return bool
+	 */
+	public function isValue()
+	{
+		return 
+			$this->type === 'string' || 
+			$this->type === 'number' ||
+			$this->type === 'null' ||
+			$this->type === 'boolTrue' ||
+			$this->type === 'boolFalse';
+	}
 }

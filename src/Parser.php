@@ -52,13 +52,70 @@ class Parser
 	 */
 	public function __construct( array $tokens )
 	{	
+		foreach( $tokens as $key => $token )
+		{
+			// remove all comments
+			if ( $token->type === 'comment' )
+			{
+				unset( $tokens[$key] );
+			}
+		}
+		
 		// reset the keys
 		$this->tokens = array_values( $tokens );
 		
 		// count the real number of tokens
 		$this->tokenCount = count( $this->tokens );
 	}
-
+	
+	/**
+	 * Adds a value to the current result
+	 *
+	 * @param Hip\Token 	$token
+	 * @param string 		$key
+	 * @return void
+	 */
+	protected function addResult( $token, $key = null )
+	{
+		// we might also get an array
+		if ( is_array( $token ) )
+		{
+			$value = $token;
+		}
+		else
+		{
+			$value = $token->value;
+			
+			switch ( $token->type ) 
+			{
+				case 'boolTrue':
+					$value = true;
+				break;
+				
+				case 'boolFalse':
+					$value = false;
+				break;
+				
+				case 'string':
+					$value = substr( $value, 1, -1 );
+				break;
+				
+				case 'number':
+					$value = $value+0;
+				break;
+			} 
+		}
+		
+		if ( is_null( $key ) )
+		{
+			$this->result[] = $value;
+		}
+		else
+		{
+			$this->result[$key] = $value;
+		}
+	}
+	
 	/**
 	 * Retrives the current token based on the index
 	 *
@@ -106,6 +163,32 @@ class Parser
 	{
 		return $this->index >= $this->tokenCount;
 	}
+	
+	/**
+	 * Skip all following whitspaces
+	 *
+	 * @return void
+	 */
+	protected function skipWhitespaces()
+	{
+		while ( !$this->parserIsDone() && $this->currentToken()->type === 'whitespace' ) 
+		{
+			$this->skipToken();
+		}
+	}	
+	
+	/**
+	 * Skip all following whitspaces, comments and linebreaks
+	 *
+	 * @return void
+	 */
+	protected function skipSomeStuff()
+	{
+		while ( !$this->parserIsDone() && ( $this->currentToken()->type === 'whitespace' || $this->currentToken()->type === 'comment' ||  $this->currentToken()->type === 'linebreak' ) ) 
+		{
+			$this->skipToken();
+		}
+	}	
 
 	/**
 	 * Check if the current token is the end of a expression
@@ -146,7 +229,7 @@ class Parser
 		$this->result = array();	
 	
 		// start parsing trought the tokens
-		for( $this->index = 0; $this->index < $this->tokenCount; $this->index++ )
+		while( !$this->parserIsDone() )
 		{
 			$this->next();
 		}
@@ -158,16 +241,42 @@ class Parser
 	/**
 	 * Parse the next token
 	 *
-	 * @return mixed
+	 * @return void
 	 */
 	protected function next()
-	{
+	{		
 		$token = $this->currentToken();
 		
-		// Identifier? we have a key! :)
-		if ( $token->type === 'identifier' )
+		// Identifier followed by equal? we have a key! :)
+		if ( $token->type === 'identifier' && $this->nextToken()->type === 'equal' )
 		{
+			$this->skipToken(2);
+			$this->parseValue( $token->value );
+		}
+		
+		// we can skip linebreaks and unused whitespaces
+		elseif ( $token->isValue() )
+		{
+			$this->skipToken();
 			
+			// skip all whitespaces and check if the next
+			// token is a linebreak
+			$this->skipWhitespaces();
+			
+			if ( !$this->parserIsDone() && $this->currentToken()->type !== 'linebreak' )
+			{
+				throw $this->errorUnexpectedToken( $this->currentToken() );
+			}
+			
+			$this->addResult( $token );
+			
+			$this->skipToken();
+		}
+		
+		// we can skip linebreaks and unused whitespaces
+		elseif ( $token->type === 'linebreak' || $token->type === 'whitespace' )
+		{
+			$this->skipToken();
 		}
 		
 		// if nothing matches throw a parser error
@@ -175,59 +284,96 @@ class Parser
 		{
 			throw $this->errorUnexpectedToken( $token );
 		}
-		
-		return $node;
 	}
-
 	
 	/**
-	 * Parse an scope block of code
+	 * Parse a value for the index
 	 *
-	 * @return Hip\Node\ScopeBlock
+	 * @param string 			$key
 	 */
-	protected function parseScopeBlock()
+	protected function parseValue( $key = null )
 	{
-		if ( $this->currentToken()->type !== 'scopeOpen' )
+		// at this point we ignore whitespaces
+		$this->skipWhitespaces();
+		
+		$token = $this->currentToken();
+		
+		// if a line break follows we have to get all values on the new
+		// level and parse them on its own
+		if ( $token->type === 'linebreak' )
 		{
-			throw new Exception( 'unexpected "'.$this->currentToken()->type.'" given at line '.$this->currentToken()->line );
+			// skip the linebreak
+			$this->skipToken();
+			
+			// get the higher level tokens and parse them
+			$parser = new static( $this->parseTokensOnNextLevel() );
+			
+			// we keep the 
+			
+			// add the result
+			$this->addResult( $parser->parse(), $key );
 		}
 		
-		$code = array( $this->currentToken() );
-		
-		$scope = 1;
-		$tokenIteration = 1;
-		
-		while ( $scope > 0 ) 
+		// there might follow a value
+		elseif ( $token->isValue() )
 		{
-			if ( !$nextToken = $this->nextToken( $tokenIteration ) )
-			{
-				throw new Exception( 'unexpected end of code at line '.$this->nextToken( $tokenIteration-1 )->line );
-			}
+			$this->addResult( $token, $key );
 			
-			if ( $nextToken->type === 'scopeOpen' )
-			{
-				$scope++;
-			}
-			elseif ( $nextToken->type === 'scopeClose' )
-			{
-				$scope--;
-			}
+			// skip the value
+			$this->skipToken();
 			
-			$code[] = $nextToken;
-			
-			$tokenIteration++;
+			// if no linebreak follow hurray syntax error
+			if ( !$this->parserIsDone() && $this->currentToken()->type !== 'linebreak' )
+			{
+				throw $this->errorUnexpectedToken( $this->currentToken() );
+			}
 		}
 		
-		$this->skipToken( $tokenIteration );
+		// if nothing matches we have an syntax error
+		else
+		{
+			throw $this->errorUnexpectedToken( $token );
+		}
+	}
+	
+	/**
+	 * Parses all following token on a higher level
+	 *
+	 * @return array[Token]
+	 */
+	protected function parseTokensOnNextLevel()
+	{
+		$onHigherLevel = true; $tokens = array();
 		
-		// parse the code
-		// first we have to remove the open and close tokens 
-		$code = array_slice( $code, 1, -1 );
+		while ( $onHigherLevel && !$this->parserIsDone() ) 
+		{
+			// if the token is not a whitespace we are done
+			if ( $this->currentToken()->type !== 'whitespace' )
+			{
+				$onHigherLevel = false;
+			}
+			else
+			{
+				// remove on level by skipping one token
+				$this->skipToken();
+				
+				// add all tokens until the next linebreak
+				while( !$this->isEndOfExpression() )
+				{
+					$tokens[] = $this->currentToken();
+					$this->skipToken();
+				}
+				
+				// also add the end of expression token and skip it
+				// if the parser is not done yet
+				if ( !$this->parserIsDone() )
+				{
+					$tokens[] = $this->currentToken();
+					$this->skipToken();
+				}
+			}
+		}
 		
-		// create a new parser
-		$parser = new static( $code );
-		
-		// return the parsed block content
-		return $parser->parse();
+		return $tokens;
 	}
 }

@@ -23,7 +23,7 @@ class Parser_Test extends \PHPUnit_Framework_TestCase
 	 */
 	public function test_consturct()
 	{	
-		$lexer = new Lexer( 'var foo' );
+		$lexer = new Lexer( 'foo: "foo"' );
 		$parser = new Parser( $lexer->tokens() );
 		
 		$this->assertInstanceOf( 'Hip\\Parser', $parser );
@@ -35,13 +35,26 @@ class Parser_Test extends \PHPUnit_Framework_TestCase
 	public function test_parseSimple()
 	{	
 		$data = Hip::decode( '
-name: "Mario"
-age: 21
-active: yes
-hasCamera: no
+		
+# the users
+
+users:
+	"mario"	
+	
+	# Johnny has some more values
+	
+	johnny:
+		"foo"
+		"bar"
+	"sfugg"
+	
+"foo"
+"bar"
+
+# sup?
 		' );
 
-		print_r( $data ); die;
+		var_dump( $data ); die;
 		
 		$data = Hip::decode( '
 		

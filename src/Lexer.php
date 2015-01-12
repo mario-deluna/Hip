@@ -60,9 +60,15 @@ class Lexer
 		"/^(yes)/" => "boolTrue",
 		"/^(no)/" => "boolFalse",
 		
+		// null
+		"/^(nil)/" => "null",
+		
+		// comments
+		"/^\#.*/" => "comment",
+		
 		//
 		"/^(\r\n|\n|\r)/" 				=> "linebreak",
-		"/^(\s+)/" 						=> "whitespace",
+		"/^(\s)/" 						=> "whitespace",
 		"/^(-)/" 						=> "seperator",
 		"/^(:)/" 						=> "equal",
 		"/^(,)/" 						=> "comma",
@@ -111,8 +117,8 @@ class Lexer
 		foreach( $this->tokenMap as $regex => $token ) 
 		{
 			if ( preg_match( $regex, substr( $this->code, $this->offset ), $matches ) ) 
-			{
-				if ( $token == 'linebreak' )
+			{	
+				if ( $token === 'linebreak' )
 				{
 					$this->line++;
 				}
