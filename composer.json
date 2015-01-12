@@ -1,0 +1,23 @@
+{
+	"name": "mario-deluna/hip",
+	"type": "library",
+	"description": "Ultra F***ing simple human readable data serialization.",
+	"version": "1.0.0",
+	"keywords": [ "hip", "data", "serialization" ],
+	"homepage": "https://github.com/mario-deluna/Hip",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Mario Döring",
+			"homepage": "https://clancats.ch",
+			"role": "Developer"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Hip\\": "src/"
+		}
+	},
+	"require": {
+	}
+}
