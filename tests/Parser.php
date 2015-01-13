@@ -36,25 +36,28 @@ class Parser_Test extends \PHPUnit_Framework_TestCase
 	{	
 		$data = Hip::decode( '
 		
-# the users
-
-users:
-	"mario"	
-	
-	# Johnny has some more values
-	
-	johnny:
+# Our users
+-
+name: "mario"
+age: 21
+	-
+	main: "php"
+	role: 
+		-
 		"foo"
 		"bar"
-	"sfugg"
-	
-"foo"
-"bar"
-
-# sup?
+		--
+		"foo"
+		"bar"
+		-
+	--
+	"foo"
+	"bar"
+	-
+-
 		' );
 
-		var_dump( $data ); die;
+		print_r( $data ); die;
 		
 		$data = Hip::decode( '
 		

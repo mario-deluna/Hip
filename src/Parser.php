@@ -273,6 +273,12 @@ class Parser
 			$this->skipToken();
 		}
 		
+		// a new array begins
+		elseif ( $token->type === 'seperator' )
+		{
+			$this->parseArray();
+		}
+		
 		// we can skip linebreaks and unused whitespaces
 		elseif ( $token->type === 'linebreak' || $token->type === 'whitespace' )
 		{
@@ -308,8 +314,6 @@ class Parser
 			// get the higher level tokens and parse them
 			$parser = new static( $this->parseTokensOnNextLevel() );
 			
-			// we keep the 
-			
 			// add the result
 			$this->addResult( $parser->parse(), $key );
 		}
@@ -334,6 +338,48 @@ class Parser
 		{
 			throw $this->errorUnexpectedToken( $token );
 		}
+	}
+	
+	/**
+	 * Parse an incomming array
+	 *
+	 * @return void
+	 */
+	protected function parseArray()
+	{
+		if ( $this->currentToken()->type !== 'seperator' )
+		{
+			throw $this->errorUnexpectedToken();
+		}
+		
+		$isArrayEnd = false;
+		
+		$tokens = array();
+		
+		while( !$this->parserIsDone() && !$isArrayEnd )
+		{
+			if ( $this->nextToken() && $this->currentToken()->type === 'linebreak' && $this->nextToken()->type === 'seperator' )
+			{
+				$isArrayEnd = true; $this->skipToken();
+			}
+			
+			// only add the tokens if its no whitespace
+			if ( !( $this->nextToken( -1 )->type === 'linebreak' && $this->currentToken()->type === 'whitespace' ) )
+			{
+				$tokens[] = $this->currentToken();
+			}
+			
+			$this->skipToken();
+		}
+		
+		// remove the seperators
+		$tokens = array_slice( $tokens, 1, -1 );
+		
+		// create a new parser
+		$parser = new static( $tokens );
+		//var_dump( $parser->parse() );
+		// add the result
+		$this->addResult( $parser->parse() );
 	}
 	
 	/**
