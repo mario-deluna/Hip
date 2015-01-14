@@ -45,6 +45,41 @@ class Token
 	}
 	
 	/**
+	 * Gets the tokens value in the correct data type
+	 *
+	 * @return mixed
+	 */
+	public function getValue()
+	{
+		$value = $this->value;
+		
+		switch ( $this->type ) 
+		{
+			case 'boolTrue':
+				$value = true;
+			break;
+			
+			case 'boolFalse':
+				$value = false;
+			break;
+			
+			case 'string':
+				$value = substr( $value, 1, -1 );
+			break;
+			
+			case 'number':
+				$value = $value+0;
+			break;
+			
+			case 'null':
+				$value = null;
+			break;
+		}
+		
+		return $value;
+	}
+	
+	/**
 	 * Is this a value token?
 	 *
 	 * @return bool

@@ -77,33 +77,15 @@ class Parser
 	 */
 	protected function addResult( $token, $key = null )
 	{
-		// we might also get an array
+		// we might also get an array wich already
+		// is converted
 		if ( is_array( $token ) )
 		{
 			$value = $token;
 		}
 		else
 		{
-			$value = $token->value;
-			
-			switch ( $token->type ) 
-			{
-				case 'boolTrue':
-					$value = true;
-				break;
-				
-				case 'boolFalse':
-					$value = false;
-				break;
-				
-				case 'string':
-					$value = substr( $value, 1, -1 );
-				break;
-				
-				case 'number':
-					$value = $value+0;
-				break;
-			} 
+			$value = $token->getValue();
 		}
 		
 		if ( is_null( $key ) )
@@ -175,7 +157,7 @@ class Parser
 		{
 			$this->skipToken();
 		}
-	}	
+	}
 	
 	/**
 	 * Skip all following whitspaces, comments and linebreaks
@@ -188,7 +170,24 @@ class Parser
 		{
 			$this->skipToken();
 		}
-	}	
+	}
+	
+	/**
+	 * Get all tokens until the next linebreak
+	 *
+	 * @return array
+	 */
+	protected function getTokensUntilLinebreak()
+	{
+		$tokens = array();
+		
+		while( !$this->parserIsDone() && $this->currentToken()->type !== 'linebreak' )
+		{
+			$tokens[] = $this->currentToken(); $this->skipToken();
+		}
+		
+		return $tokens;
+	}
 
 	/**
 	 * Check if the current token is the end of a expression
@@ -251,36 +250,42 @@ class Parser
 		if ( $token->type === 'identifier' && $this->nextToken()->type === 'equal' )
 		{
 			$this->skipToken(2);
-			$this->parseValue( $token->value );
-		}
-		
-		// we can skip linebreaks and unused whitespaces
-		elseif ( $token->isValue() )
-		{
-			$this->skipToken();
-			
-			// skip all whitespaces and check if the next
-			// token is a linebreak
 			$this->skipWhitespaces();
 			
-			if ( !$this->parserIsDone() && $this->currentToken()->type !== 'linebreak' )
+			// if the current token is now a linebreak we
+			// have to parse the tokens on the next level
+			if ( $this->currentToken()->type === 'linebreak' )
 			{
-				throw $this->errorUnexpectedToken( $this->currentToken() );
+				$this->skipToken();
+				$this->addResult( $this->parseTokensOnNextLevel(), $token->value );
 			}
-			
-			$this->addResult( $token );
-			
-			$this->skipToken();
+			// otherwise parse the value
+			else
+			{
+				$this->parseValue( $token->value );
+			}
+		}
+		
+		// when we directly have a value parse it
+		elseif ( $token->isValue() )
+		{
+			$this->parseValue();
 		}
 		
 		// a new array begins
 		elseif ( $token->type === 'seperator' )
 		{
-			$this->parseArray();
+			$this->addResult( $this->parseArray() );
+		}
+		
+		// if we have a whitespace we have an upper layer
+		elseif ( $token->type === 'whitespace' )
+		{
+			$this->addResult( $this->parseTokensOnNextLevel() );
 		}
 		
 		// we can skip linebreaks and unused whitespaces
-		elseif ( $token->type === 'linebreak' || $token->type === 'whitespace' )
+		elseif ( $token->type === 'linebreak' )
 		{
 			$this->skipToken();
 		}
@@ -296,54 +301,73 @@ class Parser
 	 * Parse a value for the index
 	 *
 	 * @param string 			$key
+	 * @return void
 	 */
 	protected function parseValue( $key = null )
 	{
-		// at this point we ignore whitespaces
-		$this->skipWhitespaces();
+		$tokens = $this->getTokensUntilLinebreak();
 		
-		$token = $this->currentToken();
+		$commaSeperated = false;
 		
-		// if a line break follows we have to get all values on the new
-		// level and parse them on its own
-		if ( $token->type === 'linebreak' )
+		// filter whitespaces and check if there is a comma
+		foreach( $tokens as $i => $token )
 		{
-			// skip the linebreak
-			$this->skipToken();
-			
-			// get the higher level tokens and parse them
-			$parser = new static( $this->parseTokensOnNextLevel() );
-			
-			// add the result
-			$this->addResult( $parser->parse(), $key );
-		}
-		
-		// there might follow a value
-		elseif ( $token->isValue() )
-		{
-			$this->addResult( $token, $key );
-			
-			// skip the value
-			$this->skipToken();
-			
-			// if no linebreak follow hurray syntax error
-			if ( !$this->parserIsDone() && $this->currentToken()->type !== 'linebreak' )
+			if ( $token->type === 'whitespace' )
 			{
-				throw $this->errorUnexpectedToken( $this->currentToken() );
+				unset( $tokens[$i] ); continue;
+			}
+			
+			// check for a comma so we know if we have 
+			// a comma seperated list
+			elseif ( $token->type === 'comma' )
+			{
+				$commaSeperated = true;
 			}
 		}
 		
-		// if nothing matches we have an syntax error
-		else
+		// reset the keys
+		$tokens = array_values( $tokens );
+		
+		// if there is just one token directly add it
+		if ( count( $tokens ) === 1 )
 		{
-			throw $this->errorUnexpectedToken( $token );
+			$this->addResult( reset( $tokens ), $key ); return;
 		}
+		
+		$values = array(); 
+		$done = false; 
+		$index = 0;
+		
+		while( !$done )
+		{
+			// check if the current token is a value
+			if ( !$tokens[$index]->isValue() )
+			{
+				throw $this->errorUnexpectedToken( $tokens[$index] );
+			}
+			
+			// the next token isset it has to be a comma
+			if ( isset( $tokens[$index+1] ) && $tokens[$index+1] !== 'comma' )
+			{
+				throw $this->errorUnexpectedToken( $tokens[$index+1] );
+			}
+			
+			// if no next token is there we are doen
+			if ( !isset( $tokens[$index+2] ) )
+			{
+				$done = true;
+			}
+			
+			$values[] = $tokens[$index]->getValue();
+		}
+		
+		$this->addResult( $values, $key );
 	}
 	
 	/**
 	 * Parse an incomming array
 	 *
-	 * @return void
+	 * @return array
 	 */
 	protected function parseArray()
 	{
@@ -363,11 +387,7 @@ class Parser
 				$isArrayEnd = true; $this->skipToken();
 			}
 			
-			// only add the tokens if its no whitespace
-			if ( !( $this->nextToken( -1 )->type === 'linebreak' && $this->currentToken()->type === 'whitespace' ) )
-			{
-				$tokens[] = $this->currentToken();
-			}
+			$tokens[] = $this->currentToken();
 			
 			$this->skipToken();
 		}
@@ -377,15 +397,15 @@ class Parser
 		
 		// create a new parser
 		$parser = new static( $tokens );
-		//var_dump( $parser->parse() );
+		
 		// add the result
-		$this->addResult( $parser->parse() );
+		return $parser->parse();
 	}
 	
 	/**
 	 * Parses all following token on a higher level
 	 *
-	 * @return array[Token]
+	 * @return array[mixed]
 	 */
 	protected function parseTokensOnNextLevel()
 	{
@@ -420,6 +440,10 @@ class Parser
 			}
 		}
 		
-		return $tokens;
+		// create a new parser
+		$parser = new static( $tokens );
+		
+		// add the result
+		return $parser->parse();
 	}
 }

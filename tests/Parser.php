@@ -36,31 +36,6 @@ class Parser_Test extends \PHPUnit_Framework_TestCase
 	{	
 		$data = Hip::decode( '
 		
-# Our users
--
-name: "mario"
-age: 21
-	-
-	main: "php"
-	role: 
-		-
-		"foo"
-		"bar"
-		--
-		"foo"
-		"bar"
-		-
-	--
-	"foo"
-	"bar"
-	-
--
-		' );
-
-		print_r( $data ); die;
-		
-		$data = Hip::decode( '
-		
 name: "Mario"
 age: 21
 active: yes
@@ -70,11 +45,11 @@ groups:
 	"Admins"
 	"Users"
 	
-emails
+emails:
 	primary: "mario@clancats.com"
 	secondary: "info@example.com"
 
-bands
+bands:
 	-
 	name: "La Dispute"
 	genre: 
@@ -82,7 +57,7 @@ bands
 		"Post-Hardcore"
 	--
 	name: "Antilopen Gang"
-	genre: "HipHip", "Rap"
+	genre: "HipHip"
 	-		
 		' );
 		
