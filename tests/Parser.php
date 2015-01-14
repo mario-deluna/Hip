@@ -57,7 +57,7 @@ bands:
 		"Post-Hardcore"
 	--
 	name: "Antilopen Gang"
-	genre: "HipHip"
+	genre: "HipHip", "Rap", "Underground"
 	-		
 		' );
 		

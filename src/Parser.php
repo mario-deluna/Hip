@@ -347,7 +347,7 @@ class Parser
 			}
 			
 			// the next token isset it has to be a comma
-			if ( isset( $tokens[$index+1] ) && $tokens[$index+1] !== 'comma' )
+			if ( isset( $tokens[$index+1] ) && $tokens[$index+1]->type !== 'comma' )
 			{
 				throw $this->errorUnexpectedToken( $tokens[$index+1] );
 			}
@@ -359,6 +359,9 @@ class Parser
 			}
 			
 			$values[] = $tokens[$index]->getValue();
+			
+			// continue to next
+			$index += 2;
 		}
 		
 		$this->addResult( $values, $key );
