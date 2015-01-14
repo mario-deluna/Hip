@@ -11,6 +11,7 @@ If you still would like to try "HIP", feel free :)
  * The encode function
  * Hip config util
  * Unit tests
+ * Not only tab's as level indicator
 
 ## Installation 
 
