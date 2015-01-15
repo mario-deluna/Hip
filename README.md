@@ -6,6 +6,8 @@ Guys please don't ask me: "Why should I use this?". The answer will always be: "
 
 If you still would like to try "HIP", feel free :)
 
+[![Build Status](https://travis-ci.org/mario-deluna/Hip.svg?branch=master)](https://travis-ci.org/mario-deluna/Hip)
+
 ## TODO 
 
  * The encode function
