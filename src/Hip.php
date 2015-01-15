@@ -34,21 +34,18 @@ class Hip
 		$lexer = new Lexer( $hip );
 		$parser = new Parser( $lexer->tokens() );
 		
-		return $parser->parse(); 
+		return $parser->parse();
 	}
 	
 	/**
-	 * Parse jane code into an array
+	 * Parse hip file
 	 *
-	 * @param string			$code
+	 * @param string			$filePath
 	 * @return string
 	 */
-	public static function read( $code )
+	public static function read( $filePath )
 	{
-		$lexer = new Lexer( $code );
-		$parser = new Parser( $lexer->tokens() );
-		
-		return $parser->parse(); 
+		return static::decode( file_get_contents( $filePath ) );
 	}
 	
 	/**

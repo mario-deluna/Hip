@@ -160,19 +160,6 @@ class Parser
 	}
 	
 	/**
-	 * Skip all following whitspaces, comments and linebreaks
-	 *
-	 * @return void
-	 */
-	protected function skipSomeStuff()
-	{
-		while ( !$this->parserIsDone() && ( $this->currentToken()->type === 'whitespace' || $this->currentToken()->type === 'comment' ||  $this->currentToken()->type === 'linebreak' ) ) 
-		{
-			$this->skipToken();
-		}
-	}
-	
-	/**
 	 * Get all tokens until the next linebreak
 	 *
 	 * @return array
@@ -194,15 +181,8 @@ class Parser
 	 *
 	 * @return bool
 	 */
-	protected function isEndOfExpression( $includeComma = false )
+	protected function isEndOfExpression()
 	{
-		if ( $includeComma ) 
-		{
-			return $this->parserIsDone() ||
-				$this->currentToken()->type === 'linebreak' ||
-				$this->currentToken()->type === 'comma';
-		}
-
 		return $this->parserIsDone() || $this->currentToken()->type === 'linebreak';
 	}
 
@@ -373,12 +353,7 @@ class Parser
 	 * @return array
 	 */
 	protected function parseArray()
-	{
-		if ( $this->currentToken()->type !== 'seperator' )
-		{
-			throw $this->errorUnexpectedToken();
-		}
-		
+	{		
 		$isArrayEnd = false;
 		
 		$tokens = array();

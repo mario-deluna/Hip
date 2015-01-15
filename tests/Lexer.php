@@ -28,6 +28,18 @@ class Lexer_Test extends \PHPUnit_Framework_TestCase
 		return $types;
 	}
 	
+	protected function pickTokenLine( array $tokens )
+	{
+		$lines = array();
+		
+		foreach( $tokens as $token )
+		{
+			$lines[] = $token->line;
+		}
+		
+		return $lines;
+	}
+	
 	/**
 	 * tests Lexer
 	 */
@@ -83,8 +95,27 @@ class Lexer_Test extends \PHPUnit_Framework_TestCase
 		// simple
 		$lexer = new Lexer( 'foo:"bar"' );
 		$this->assertEquals( 
-			['identifier', 'equal', 'string'], 
+			array( 'identifier', 'equal', 'string' ), 
 			$this->pickTokenTypes( $lexer->tokens() )
 		);
+	}
+	
+	/**
+	 * tests Lexer
+	 */
+	public function test_linenum()
+	{	
+		$lexer = new Lexer( "yes\nyes" );
+		$this->assertEquals( array(1,2,2), $this->pickTokenLine( $lexer->tokens() ) );
+	}
+	
+	/**
+	 * tests Lexer error
+	 *
+	 * @expectedException \Hip\Lexer\Exception
+	 */
+	public function test_unknownToken()
+	{	
+		$lexer = new Lexer( "*" ); $lexer->tokens();
 	}
 }

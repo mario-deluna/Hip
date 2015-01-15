@@ -9,4 +9,4 @@
  * @copyright 		2015 ClanCats GmbH
  *
  */
-class Exception extends \Hip\Exception {}
+class Exception extends \Exception {}
