@@ -58,15 +58,15 @@ class Lexer_Test extends \PHPUnit_Framework_TestCase
 	{	
 		// string
 		$lexer = new Lexer( '"hello world"' );
-		$this->assertEquals( ['string'], $this->pickTokenTypes( $lexer->tokens() ) );
+		$this->assertEquals( array( 'string' ), $this->pickTokenTypes( $lexer->tokens() ) );
 		
 		// string singlequotes
 		$lexer = new Lexer( "'hello world'" );
-		$this->assertEquals( ['string'], $this->pickTokenTypes( $lexer->tokens() ) );
+		$this->assertEquals( array( 'string' ), $this->pickTokenTypes( $lexer->tokens() ) );
 		
 		// string singlequotes escaped
 		$lexer = new Lexer( "'hello \'world'" );
-		$this->assertEquals( ['string'], $this->pickTokenTypes( $lexer->tokens() ) );
+		$this->assertEquals( array( 'string' ), $this->pickTokenTypes( $lexer->tokens() ) );
 	}
 	
 	/**
@@ -76,15 +76,15 @@ class Lexer_Test extends \PHPUnit_Framework_TestCase
 	{	
 		// int
 		$lexer = new Lexer( '124' );
-		$this->assertEquals( ['number'], $this->pickTokenTypes( $lexer->tokens() ) );
+		$this->assertEquals( array( 'number' ), $this->pickTokenTypes( $lexer->tokens() ) );
 		
 		// float
 		$lexer = new Lexer( "12.3112" );
-		$this->assertEquals( ['number'], $this->pickTokenTypes( $lexer->tokens() ) );
+		$this->assertEquals( array( 'number' ), $this->pickTokenTypes( $lexer->tokens() ) );
 		
 		// float in string
 		$lexer = new Lexer( "'12.31'" );
-		$this->assertEquals( ['string'], $this->pickTokenTypes( $lexer->tokens() ) );
+		$this->assertEquals( array( 'string' ), $this->pickTokenTypes( $lexer->tokens() ) );
 	}
 	
 	/**
