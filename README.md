@@ -1,8 +1,6 @@
-# Hip <small>**H**uman **I**n**p**ut</small>
+# Hip
 
-[![Build Status](https://travis-ci.org/mario-deluna/Hip.svg?branch=master)](https://travis-ci.org/mario-deluna/Hip)
-
-
+**H**uman **I**n**p**ut [![Build Status](https://travis-ci.org/mario-deluna/Hip.svg?branch=master)](https://travis-ci.org/mario-deluna/Hip)
 
 Hip does not try to replace any data markups or create a [new standard](http://xkcd.com/927/). The target of hip is to be readable and writable by non-technicals folks without out having to explain the syntax.
 
