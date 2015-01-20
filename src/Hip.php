@@ -12,16 +12,6 @@
 class Hip
 {	
 	/**
-	 * Ecnode array to hip data string
-	 *
-	 * 
-	 */
-	public static function encode()
-	{
-		
-	}
-	
-	/**
 	 * Decode hip data string to an array
 	 *
 	 * @throws Hip\Exception
@@ -46,6 +36,16 @@ class Hip
 	public static function read( $filePath )
 	{
 		return static::decode( file_get_contents( $filePath ) );
+	}
+	
+	/**
+	 * Ecnode array to hip data string
+	 *
+	 * 
+	 */
+	public static function encode()
+	{
+		
 	}
 	
 	/**

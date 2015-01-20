@@ -11,13 +11,6 @@ Hip does not try to replace any data markups or create a [new standard](http://x
  - **Why should I use this?** Sorry dude I don't know.. This data parser is an experiment and will maybe be implemented into the ClanCatsFramework 2.1. If you are looking for an approved and stable data serialization format use [YAML](http://yaml.org/). If you believe Hip could be useful for you feel free, every user makes me happy :)
 
 
-## TODO 
-
- * An encoding function
- * Hip config object / utility
- * Automatic detect the level indicator ( space, tab etc. )
- * more tests...
-
 ## Installation 
 
 This Hip parser is written in _PHP_ using _PSR-4_ autoloading you can install it using _composer_. 
@@ -27,6 +20,36 @@ This Hip parser is written in _PHP_ using _PSR-4_ autoloading you can install it
 {
     "mario-deluna/hip": "dev-master"
 }
+```
+
+## Usage 
+
+### Encoding / Decoding
+
+Decode a hip data string to an array:
+
+```php
+Hip\Hip::decode( $hipString );
+```
+
+Encode an array to a hip data string:
+
+```php
+Hip\Hip::decode( $myArray );
+```
+
+### Reading / Writing files
+
+Read hip file:
+
+```php
+Hip\Hip::read( 'my/path/to/file.hip' );
+```
+
+Write hip file:
+
+```php
+Hip\Hip::write( 'my/path/to/file.hip', $myArray );
 ```
 
 ## Hip syntax
@@ -122,3 +145,9 @@ wich equals
 }
 ```
 
+## TODO 
+
+* An encoding function
+* Hip config object / utility
+* Automatic detect the level indicator ( space, tab etc. )
+* more tests...
