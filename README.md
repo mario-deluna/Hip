@@ -8,7 +8,7 @@ Hip does not try to replace any data markups or create a [new standard](http://x
 
 ## FAQ
 
- - **Why should I use this?** Sorry dude I don't know.. This data parser is an experiment and will maybe be implemented into the ClanCatsFramework 2.1. If you are looking for a approved and stable data serialization format use [YAML](http://yaml.org/). If you believe Hip could be useful for you feel free, every user makes me happy :)
+ - **Why should I use this?** Sorry dude I don't know.. This data parser is an experiment and will maybe be implemented into the ClanCatsFramework 2.1. If you are looking for an approved and stable data serialization format use [YAML](http://yaml.org/). If you believe Hip could be useful for you feel free, every user makes me happy :)
 
 
 ## TODO 
@@ -67,7 +67,7 @@ wich equals
 }
 ```
 
-### Lists
+### Array lists
 
 ```yaml
 instruments:
@@ -95,6 +95,30 @@ wich equals
             "strings": 4
         }
     ] 
+}
+```
+
+### data types
+
+```yaml
+string: "Hello World"
+integer: 42
+float: 3.14
+yepBool: yes
+nopeBool: no
+nothing: nil
+```
+
+wich equals
+
+```json
+{
+    "string": "Hello World",
+    "integer": 42,
+    "float": 3.14,
+    "yepBool": true,
+    "nopeBool": false,
+    "nothing": null
 }
 ```
 
