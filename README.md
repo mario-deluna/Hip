@@ -1,19 +1,22 @@
 # Hip
 
+[![Build Status](https://travis-ci.org/mario-deluna/Hip.svg?branch=master)](https://travis-ci.org/mario-deluna/Hip)
+
 **H**uman **I**n**p**ut
 
-Guys please don't ask me: "Why should I use this?". The answer will always be: "I don't know sorry.". This data parser is more an experiment and will maybe be implemented into the ClanCatsFramework 2.1. If you guys are searching for a nice tested and approved data Serialization format use [YAML](http://yaml.org/).
+Hip does not try to replace any data markups or create a [new standard](http://xkcd.com/927/). The target of hip is to be readable and writable by non-technicals folks without out having to explain the syntax.
 
-If you still would like to try "HIP", feel free :)
+## FAQ
 
-[![Build Status](https://travis-ci.org/mario-deluna/Hip.svg?branch=master)](https://travis-ci.org/mario-deluna/Hip)
+ - **Why should I use this?** Sorry dude I don't know.. This data parser is an experiment and will maybe be implemented into the ClanCatsFramework 2.1. If you are looking for a approved and stable data serialization format use [YAML](http://yaml.org/). If you believe Hip could be useful for you feel free, every user makes me happy :)
+
 
 ## TODO 
 
- * The encode function
- * Hip config util
- * Unit tests
- * Not only tab's as level indicator
+ * An encoding function
+ * Hip config object / utility
+ * Automatic detect the level indicator ( space, tab etc. )
+ * more tests...
 
 ## Installation 
 
@@ -26,7 +29,74 @@ This Hip parser is written in _PHP_ using _PSR-4_ autoloading you can install it
 }
 ```
 
-## Syntax
+## Hip syntax
+
+### Simple key values
+
+```yaml
+name: "Zaphod beeblebrox"
+job: "President of the Galaxy"
+```
+
+wich equals
+
+```json
+{
+    "name": "Zaphod beeblebrox",
+    "job": "President of the Galaxy"
+}
+```
+
+### Multi layer
+
+```yaml
+recipe:
+    duration: 60
+    ingredients: "eggs", "bacon", "cream", "leek"
+```
+
+wich equals
+
+```json
+{
+    "recipe": 
+    {
+        "duration": 60,
+        "ingredients": [ "eggs", "bacon", "cream", "leek" ]
+    } 
+}
+```
+
+### Lists
+
+```yaml
+instruments:
+    -
+    name: "Guitar"
+    strings: 6
+    --
+    name: "Bass"
+    strings: 4
+    -
+```
+
+wich equals
+
+```json
+{
+    "instruments": 
+    [
+        {
+            "name": "Guitar",
+            "strings": 6
+        },
+        {
+            "name": "Bass",
+            "strings": 4
+        }
+    ] 
+}
+```
 
 Let an example speek:
 
