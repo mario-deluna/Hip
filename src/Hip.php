@@ -41,11 +41,13 @@ class Hip
 	/**
 	 * Ecnode array to hip data string
 	 *
-	 * 
+	 * @param array 		$data
+	 * @return string
 	 */
-	public static function encode()
+	public static function encode( array $data )
 	{
-		
+		$compiler = new Compiler( $data ); 
+		return $compiler->transform();
 	}
 	
 	/**

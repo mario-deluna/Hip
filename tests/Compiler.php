@@ -1,34 +1,36 @@
-<?php namespace Jane\Tests;
+<?php namespace Hip\Tests;
 /**
- * Jane Iterator tests
+ * Hip Lexer test
  ** 
  *
- * @package 		Jane
+ * @package 		Hip
  * @author			Mario Döring <mario@clancats.com>
  * @version			1.0
- * @copyright 		2014 - 2015 ClanCats GmbH
+ * @copyright 		2015 ClanCats GmbH
  *
- * @group Jane
- * @group Jane_Compiler
- */
+ * @group Hip
+ * @group Hip_Parser
+*/
 
-use Jane\Compiler;
-use Jane\Parser;
+use Hip\Compiler;
+use Hip\Hip;
 
 class Compiler_Test extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * tests Jane::config
+	 * tests compile
 	 */
-	public function test_varAssignment()
+	public function test_compileSimpleArray()
 	{	
-		/*$parser = new Parser( '
-		myHello = "hello"
-		name = "world"
-		helloWorld = myHello
-		helloWorld .= name' );
-		$compiler = new Compiler( $parser->parse() );
+		$data = Hip::encode([
+			
+			'name' => 'foo',
+			'age' => 12,
+			'active' => true,
+			'tags' => [ 'a', 'b', 'c' ]
+			
+		]);
 		
-		var_dump( $compiler->transform() );*/
+		echo $data; die;
 	}
 }
