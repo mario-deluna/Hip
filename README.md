@@ -1,6 +1,19 @@
 # Hip
 
-**H**uman **I**n**p**ut [![Build Status](https://travis-ci.org/mario-deluna/Hip.svg?branch=master)](https://travis-ci.org/mario-deluna/Hip)
+**H**uman **I**n**p**ut 
+
+[![Build Status](https://travis-ci.org/mario-deluna/Hip.svg?branch=master)](https://travis-ci.org/mario-deluna/Hip)
+
+```yaml
+name: "Hip"
+type: "Markup language"
+version: 1.0
+tags: "markup", "serialization", "language"
+authors:
+    -
+    name: "Mario Döring"
+    -
+```
 
 Hip does not try to replace any data markups or create a [new standard](http://xkcd.com/927/). The target of hip is to be readable and writable by non-technicals folks without out having to explain the syntax.
 
