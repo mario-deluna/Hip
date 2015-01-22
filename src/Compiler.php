@@ -58,6 +58,25 @@ class Compiler
 		
 		return false;
 	}
+	
+	/**
+	 * Check if an array only contains other arrays
+	 *
+	 * @param array 			$data
+	 * @return bool
+	 */
+	protected function onlyContainsArrays( array $data )
+	{
+		foreach ( $data as $value ) 
+		{
+			if ( !is_array( $value ) )
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
 
 	/**
 	 * Compiles the current data 
@@ -68,6 +87,12 @@ class Compiler
 	{
 		$buffer = '';
 		
+		// If this stuff is true we assume that we have an collection
+		if ( is_array( $this->data ) && !$this->isAssoc( $this->data ) && $this->onlyContainsArrays( $this->data ) )
+		{
+			return $this->transformCollection( $this->data );
+		}
+		
 		foreach( $this->data as $key => $value )
 		{
 			// first of all we have to check if our value is 
@@ -76,6 +101,12 @@ class Compiler
 			{
 				$value = $this->transformCommaSeperatedArray( $value );
 			}
+			
+			// or just an normal array 
+			elseif ( is_array( $value ) )
+			{
+				$value = "\n".$this->compileNextLevel( $value );
+			}	
 			
 			// everyting else should be a normal value
 			else
@@ -97,6 +128,26 @@ class Compiler
 	}
 	
 	/**
+	 * Compiles an array on an higher level
+	 *
+	 * @param array 			$data
+	 * @return string
+	 */
+	protected function compileNextLevel( $data )
+	{
+		$compiler = new static( $data );
+		
+		$buffer = "";
+		
+		foreach ( explode( "\n", $compiler->transform() ) as $line ) 
+		{
+			$buffer .= '  '.$line."\n";	
+		}
+		
+		return '  '.trim( $buffer );
+	}
+	
+	/**
 	 * Transforms an array into an comma seperated list 
 	 *
 	 * @param array 			$data
@@ -104,11 +155,38 @@ class Compiler
 	 */
 	protected function transformCommaSeperatedArray( array $data )
 	{
-		return implode( ', ', array_map( function( &$value ) 
+		return implode( ', ', array_map( function( $value ) 
 		{
-			
-			$value = $this->transformValue( $value );var_dump( $value );
+			return $this->transformValue( $value );
 		}, $data ));	
+	}
+	
+	/**
+	 * Transforms collection list 
+	 *
+	 * @param array 			$data
+	 * @return string
+	 */
+	protected function transformCollection( array $data )
+	{
+		$buffer = "";
+		
+		$count = count( $data );
+		
+		foreach( $data as $key => $array )
+		{
+			$compiler = new static( $array );
+			
+			$buffer .= "-\n".$compiler->transform()."-";
+			
+			// if its the last item we don't need to add a break
+			if ( $key !== $count - 2 )
+			{
+				$buffer .= "\n";
+			}
+		}
+		
+		return $buffer;
 	}
 	
 	/**
@@ -144,35 +222,5 @@ class Compiler
 		}
 		
 		return $value;
-	}
-	
-	/**
-	 * Compile an associative array
-	 *
-	 * @param array 			$data
-	 * @return string
-	 */
-	protected function transformAssocArray( array $data )
-	{
-		$buffer = '';
-		return $buffer;
-	}
-	
-	/**
-	 * Compile an sequential array
-	 *
-	 * @param array 			$data
-	 * @return string
-	 */
-	protected function transformSequentialArray( array $data )
-	{
-		$buffer = '';
-		
-		foreach ( $data as $value ) 
-		{
-			$buffer .= $this->transformValue( $value )."\n";
-		}
-		
-		return $buffer;
 	}
 }
