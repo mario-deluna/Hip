@@ -205,7 +205,7 @@ class Compiler
 	 * @param mixed 			$value
 	 * @return string
 	 */
-	protected function transformValue( $value )
+	public function transformValue( $value )
 	{
 		// strings
 		if ( is_string( $value ) )
