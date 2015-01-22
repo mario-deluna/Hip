@@ -162,9 +162,12 @@ class Compiler
 	 */
 	protected function transformCommaSeperatedArray( array $data )
 	{
-		return implode( ', ', array_map( function( $value ) 
+		// php 5.3 fix
+		$that = $this;
+		
+		return implode( ', ', array_map( function( $value ) use( $that )
 		{
-			return $this->transformValue( $value );
+			return $that->transformValue( $value );
 		}, $data ));	
 	}
 	

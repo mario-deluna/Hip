@@ -34,8 +34,7 @@ class EncondingDecoding_Test extends \PHPUnit_Framework_TestCase
 			
 			array( array( array(), 'foo' => array( array( 'bar' => 2 ) ), null ) ),
 			
-			array( array( array(), 'foo' => array( array( 'bar' => 2 ) ), null ) ),
-		
+			array( array( array( 'foo' ), array( 'foo' )  ), array( array( 'foo' ), array( 'foo' ) ) ),
 		);
 	}
 
@@ -47,6 +46,18 @@ class EncondingDecoding_Test extends \PHPUnit_Framework_TestCase
 	public function testItAndIfAllWorkImHappy( $array )
 	{
 		$hip = Hip::encode( $array );
+		
+		// Debugging 
+		/*echo "\n";
+		echo var_dump( $array );
+		echo "\n";
+		
+		echo "\n".$hip."\n";
+		
+		echo "\n";
+		echo var_dump(  Hip::decode( $hip ) );
+		echo "\n";*/
+		
 		$this->assertEquals( $array, Hip::decode( $hip ) );
 	}
 }
