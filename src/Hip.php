@@ -47,7 +47,7 @@ class Hip
 	public static function encode( array $data )
 	{
 		$compiler = new Compiler( $data ); 
-		return $compiler->transform();
+		return trim( $compiler->transform(), "\n" );
 	}
 	
 	/**

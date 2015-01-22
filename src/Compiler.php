@@ -131,7 +131,7 @@ class Compiler
 			$buffer .= $value."\n";
 		}
 		
-		return trim( $buffer );
+		return $buffer;
 	}
 	
 	/**

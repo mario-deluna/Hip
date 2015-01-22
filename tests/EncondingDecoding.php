@@ -31,6 +31,10 @@ class EncondingDecoding_Test extends \PHPUnit_Framework_TestCase
 			array( array( array(), 'foo' => 'bar' ) ),
 			
 			array( array( array(), 'foo' => array(), true ) ),
+			
+			array( array( array(), 'foo' => array( array( 'bar' => 2 ) ), null ) ),
+			
+			array( array( array(), 'foo' => array( array( 'bar' => 2 ) ), null ) ),
 		
 		);
 	}

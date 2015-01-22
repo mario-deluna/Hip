@@ -85,7 +85,7 @@ class Lexer
 	public function __construct( $code )
 	{
 		// we have to convert all tabs to whitespaces to
-		$code = trim( str_replace( "\t", " ", $code ) );
+		$code = trim( str_replace( array( "  ", "\t" ), " ", $code ) );
 		
 		$this->code = $code;
 		$this->length = strlen( $code );
