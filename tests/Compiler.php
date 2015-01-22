@@ -60,20 +60,55 @@ class Compiler_Test extends \PHPUnit_Framework_TestCase
 	/**
 	 * tests compile
 	 */
-	public function test_compileSequentialeArray()
+	public function test_compileSequentiale()
 	{
-		$data = Hip::encode( array( 'foo', 'bar' ) );
+		$data = Hip::encode( array( 'get up', 'stand up' ) );
 		
-		$this->assertEquals( $this->getExpectedHip( 'sequentialArray' ), $data );
+		$this->assertEquals( $this->getExpectedHip( 'sequential' ), $data );
+		
+		// more layers
+		$data = Hip::encode( array( 'get up', 'stand up', array( 'stand up', 'for your right', array( 'don\'t give up', 'the fight' ) ) ) );
+		
+		$this->assertEquals( $this->getExpectedHip( 'sequential3D' ), $data );
+		
+		// natives
+		$data = Hip::encode( array( 'string', 42, 3.14, true, false, null ) );
+		
+		$this->assertEquals( $this->getExpectedHip( 'sequentialNatives' ), $data );
 	}
 	
 	/**
 	 * tests compile
 	 */
-	public function test_compileAssociativeArray()
+	public function test_compileAssociative()
 	{
-		$data = Hip::encode( array( 'foo' => 'bar', 'number' => 42 ) );
+		$data = Hip::encode( array( 'who' => 'let the dogs out', 'theAnswerToLifeTheUniverseAndEverything' => 42 ) );
 		
-		$this->assertEquals( $this->getExpectedHip( 'associativeArray' ), $data );
+		$this->assertEquals( $this->getExpectedHip( 'associative' ), $data );
+		
+		// more layers
+		$data = Hip::encode( array( 
+			'this' => array( 
+				'is' => array(
+					'pretty' => array(
+						'high' => 'doe'
+					)
+				),
+			)
+		));
+		
+		$this->assertEquals( $this->getExpectedHip( 'associative3D' ), $data );
+		
+		// natives
+		$data = Hip::encode( array(
+			'string' => 'string',
+			'int' => 42,
+			'float' => 3.14,
+			'true' => true,
+			'false' => false,
+			'null' => null 
+		));
+		
+		$this->assertEquals( $this->getExpectedHip( 'associativeNatives' ), $data );
 	}
 }

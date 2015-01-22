@@ -105,7 +105,7 @@ class Compiler
 			// or just an normal array 
 			elseif ( is_array( $value ) )
 			{
-				$value = "\n".$this->compileNextLevel( $value );
+				$value = ( is_string( $key ) ? "\n" : '' ). $this->compileNextLevel( $value );
 			}	
 			
 			// everyting else should be a normal value
@@ -124,7 +124,7 @@ class Compiler
 			$buffer .= $value."\n";
 		}
 		
-		return $buffer;
+		return trim( $buffer );
 	}
 	
 	/**
