@@ -105,7 +105,14 @@ class Compiler
 			// or just an normal array 
 			elseif ( is_array( $value ) )
 			{
-				$value = ( is_string( $key ) ? "\n" : '' ). $this->compileNextLevel( $value );
+				if ( empty( $value ) )
+				{
+					$value = "--";
+				}
+				else
+				{
+					$value = ( is_string( $key ) ? "\n" : '' ). $this->compileNextLevel( $value );
+				}
 			}	
 			
 			// everyting else should be a normal value

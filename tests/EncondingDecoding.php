@@ -18,16 +18,21 @@ class EncondingDecoding_Test extends \PHPUnit_Framework_TestCase
 {	
 	public static function arrayDataProvider()
 	{
-		return array( array( 
+		return array( 
+		
+			array( array( 'A', 'B' ) ),
 			
-			array( 'A', 'B' ),
+			array( array( 'A', 31, true ) ),
 			
-			array( 'A', 31, true ),
+			array( array( 'C', null, 'G' ) ),
 			
-			array( 'C', null, 'G' ),
+			array( array( 'F', 'D' => null, 'foo', true ) ),
 			
-			array( 'F', 'D' => null, 'foo', true ),
-		));
+			array( array( array(), 'foo' => 'bar' ) ),
+			
+			array( array( array(), 'foo' => array(), true ) ),
+		
+		);
 	}
 
 	/**

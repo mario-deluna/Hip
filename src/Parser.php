@@ -232,9 +232,21 @@ class Parser
 			$this->skipToken(2);
 			$this->skipWhitespaces();
 			
+			// we might have an empty array
+			if ( $this->currentToken()->type === 'seperator' )
+			{
+				if ( $this->nextToken() && $this->nextToken()->type === 'seperator' )
+				{
+					$this->addResult( array(), $token->value ); $this->skipToken(2); $this->skipWhitespaces();
+				}
+				else
+				{
+					throw $this->errorUnexpectedToken( $this->currentToken() );
+				}
+			}
 			// if the current token is now a linebreak we
 			// have to parse the tokens on the next level
-			if ( $this->currentToken()->type === 'linebreak' )
+			elseif ( $this->currentToken()->type === 'linebreak' )
 			{
 				$this->skipToken();
 				$this->addResult( $this->parseTokensOnNextLevel(), $token->value );
@@ -255,7 +267,15 @@ class Parser
 		// a new array begins
 		elseif ( $token->type === 'seperator' )
 		{
-			$this->addResult( $this->parseArray() );
+			// if the next token is also an seperator we have an empty array
+			if ( $this->nextToken() && $this->nextToken()->type === 'seperator' )
+			{
+				$this->addResult( array() ); $this->skipToken( 2 ); $this->skipWhitespaces();
+			}
+			else
+			{
+				$this->addResult( $this->parseArray() );
+			}
 		}
 		
 		// if we have a whitespace we have an upper layer
