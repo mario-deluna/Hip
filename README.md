@@ -1,6 +1,6 @@
 # Hip
 
-**H**uman **I**n**p**ut 
+**H**uman **I**n**p**ut / Simple human readable data markup.
 
 [![Build Status](https://travis-ci.org/mario-deluna/Hip.svg?branch=master)](https://travis-ci.org/mario-deluna/Hip)
 
@@ -9,17 +9,13 @@ name: "Hip"
 type: "Markup language"
 version: 1.0
 tags: "markup", "serialization", "language"
-authors:
-    -
-    name: "Mario Döring"
-    -
 ```
 
 Hip does not try to replace any data markups or create a [new standard](http://xkcd.com/927/). The target of hip is to be readable and writable by non-technicals folks without out having to explain the syntax.
 
 ## FAQ
 
- - **Why should I use this?** Sorry dude I don't know.. This data parser is an experiment and will maybe be implemented into the ClanCatsFramework 2.1. If you are looking for an approved and stable data serialization format use [YAML](http://yaml.org/). If you believe Hip could be useful for you feel free, every user makes me happy :)
+ - **Why should I use this?** Sorry dude I don't know.. This data parser is an experiment and will maybe be implemented into the ClanCatsFramework 2.1. If you are looking for an approved and stable data serialization format use [YAML](http://yaml.org/). If you believe Hip could be useful, feel free, every user makes me happy :)
 
 
 ## Installation 
