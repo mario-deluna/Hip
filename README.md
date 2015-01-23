@@ -154,7 +154,6 @@ wich equals
 
 ## TODO 
 
-* An encoding function
 * Hip config object / utility
 * Automatic detect the level indicator ( space, tab etc. )
 * more tests...
