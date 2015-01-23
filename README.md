@@ -3,6 +3,7 @@
 **H**uman **I**n**p**ut / Simple human readable data markup.
 
 [![Build Status](https://travis-ci.org/mario-deluna/Hip.svg?branch=master)](https://travis-ci.org/mario-deluna/Hip)
+[![License](http://img.shields.io/packagist/l/clancats/framework.svg?style=flat)](https://github.com/mario-deluna/Hip)
 
 ```yaml
 name: "Hip"
