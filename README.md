@@ -1,4 +1,4 @@
-![Hip logo](https://cloud.githubusercontent.com/assets/956212/5879745/0c6f224c-a332-11e4-87a9-4e03b420f865.png)
+![Hip logo](https://cloud.githubusercontent.com/assets/956212/5924947/2c8542ba-a660-11e4-8f30-a50286353b3b.png)
 
 **H**uman **I**n**p**ut / Simple human readable data markup.
 
