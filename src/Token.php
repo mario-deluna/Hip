@@ -43,7 +43,7 @@ class Token
 	{
 		list( $this->type, $this->value, $this->line ) = $token;
 	}
-	
+
 	/**
 	 * Gets the tokens value in the correct data type
 	 *
@@ -52,33 +52,33 @@ class Token
 	public function getValue()
 	{
 		$value = $this->value;
-		
+
 		switch ( $this->type ) 
 		{
 			case 'boolTrue':
 				$value = true;
 			break;
-			
+
 			case 'boolFalse':
 				$value = false;
 			break;
-			
+
 			case 'string':
-				$value = substr( $value, 1, -1 );
+				$value = str_replace( "\\\\", "\\", substr( $value, 1, -1 ) );
 			break;
-			
+
 			case 'number':
 				$value = $value+0;
 			break;
-			
+
 			case 'null':
 				$value = null;
 			break;
 		}
-		
+
 		return $value;
 	}
-	
+
 	/**
 	 * Is this a value token?
 	 *
